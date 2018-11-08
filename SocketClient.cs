@@ -73,7 +73,7 @@ public class AsynchronousClient {
         //IPHostEntry ipHostInfo =  Dns.GetHostEntry("192.168.99.100");
        //IPHostEntry ipHostInfo =  Dns.GetHostEntry("172.17.0.2");
      //  Console.WriteLine(Dns.GetHostName("server"));
-IPHostEntry ipHostInfo = Dns.GetHostEntry("10.3.255.163");
+IPHostEntry ipHostInfo = Dns.GetHostEntry("35.202.7.16");
 
       // IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName()); 
             IPAddress ipAddress = ipHostInfo.AddressList[0];  
