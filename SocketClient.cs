@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Threading;  
 using System.Text; 
 using System.Net.NetworkInformation; 
+using System.Configuration;
 
 
 namespace VSCode
@@ -63,6 +64,8 @@ public class AsynchronousClient {
     public static void StartClient() {  
         // Connect to a remote device.  
         try {  
+
+            
             // Establish the remote endpoint for the socket.  
             // The name of the   
             // remote device is "host.contoso.com".  
@@ -73,13 +76,16 @@ public class AsynchronousClient {
         //IPHostEntry ipHostInfo =  Dns.GetHostEntry("192.168.99.100");
        //IPHostEntry ipHostInfo =  Dns.GetHostEntry("172.17.0.2");
      //  Console.WriteLine(Dns.GetHostName("server"));
-IPHostEntry ipHostInfo = Dns.GetHostEntry("35.202.7.16");
+   //IPHostEntry ipHostInfo = Dns.GetHostEntry("35.202.7.16");
+var serverDNS= Environment.GetEnvironmentVariable("serverdns");
+Console.WriteLine(serverDNS);
+IPHostEntry ipHostInfo = Dns.GetHostEntry(serverDNS);
 
       // IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName()); 
             IPAddress ipAddress = ipHostInfo.AddressList[0];  
             IPEndPoint remoteEP = new IPEndPoint(ipAddress,8090);
               int tradeCount=0;
-while (tradeCount <2)
+while (tradeCount <1)
             {
             // Create a TCP/IP socket.  
             Socket client = new Socket(ipAddress.AddressFamily,  
@@ -98,7 +104,7 @@ while (tradeCount <2)
                 Console.WriteLine("Book Trade");
                 
                 // Send test data to the remote device.  
-                Send(client,"TradeId:"+tradeCount+"CCYPair:EURUSD"+"Rate:1.5<EOF>");  
+                Send(client,"TradeId:"+tradeCount+"CCYPair:EURGBP"+"Rate:1.5<EOF>");  
                     sendDone.WaitOne();  
 
                 // Receive the response from the remote device.  
