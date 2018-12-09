@@ -79,14 +79,18 @@ public class AsynchronousClient {
    //IPHostEntry ipHostInfo = Dns.GetHostEntry("35.202.7.16");
 var serverDNS= Environment.GetEnvironmentVariable("serverdns");
 Console.WriteLine(serverDNS);
+bool KeepBooking = true;
+int tradeCount=0;
+while (KeepBooking)
+            {
 IPHostEntry ipHostInfo = Dns.GetHostEntry(serverDNS);
 
       // IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName()); 
             IPAddress ipAddress = ipHostInfo.AddressList[0];  
             IPEndPoint remoteEP = new IPEndPoint(ipAddress,8090);
-              int tradeCount=0;
-while (tradeCount <1)
-            {
+              
+              
+
             // Create a TCP/IP socket.  
             Socket client = new Socket(ipAddress.AddressFamily,  
                 SocketType.Stream, ProtocolType.Tcp);  
@@ -104,7 +108,7 @@ while (tradeCount <1)
                 Console.WriteLine("Book Trade");
                 
                 // Send test data to the remote device.  
-                Send(client,"TradeId:"+tradeCount+"CCYPair:EURGBP"+"Rate:1.5<EOF>");  
+                Send(client,"TradeId:"+tradeCount+",CCYPair:EURGBP,"+"date:14/12/2018,"+"Rate:1.5<EOF>");  
                     sendDone.WaitOne();  
 
                 // Receive the response from the remote device.  
@@ -112,13 +116,23 @@ while (tradeCount <1)
                 receiveDone.WaitOne();  
 //Thread.Sleep(500);
                 // Write the response to the console.  
-                Console.WriteLine("Response received : {0}", response); 
+                
 
                 // var key= Console.ReadKey(); 
                 // if(key.KeyChar=='N') break;
             // Release the socket.  
-            client.Shutdown(SocketShutdown.Both);  
-            client.Close(); 
+           // client.Shutdown(SocketShutdown.Send);  
+            //client.Close(); 
+
+            Console.WriteLine("press y to continue"); 
+           var key =Console.ReadKey();
+           if(key.Key==ConsoleKey.Y)
+           {
+                tradeCount++;
+           }
+           else {
+               KeepBooking = false;
+           }
             
             }
              
@@ -181,6 +195,7 @@ while (tradeCount <1)
                 // All the data has arrived; put it in response.  
                 if (state.sb.Length > 1) {  
                     response = state.sb.ToString();  
+                    Console.WriteLine("Response received : {0}", response); 
                 }  
                 // Signal that all bytes have been received.  
                 receiveDone.Set();  
