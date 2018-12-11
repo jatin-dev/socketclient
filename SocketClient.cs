@@ -107,14 +107,23 @@ IPHostEntry ipHostInfo = Dns.GetHostEntry(serverDNS);
                     tradeCount++;
                 Console.WriteLine("Book Trade");
                 
-                // Send test data to the remote device.  
-                Send(client,"TradeId:"+tradeCount+",CCYPair:EURGBP,"+"date:14/12/2018,"+"Rate:1.5<EOF>");  
+                DateTime d =  new DateTime().AddDays(2);
+                // Send test data to the remote device.
+                if(tradeCount%2==0)  
+                {
+                    Send(client,"InstrumentType:SPOT,amount:"+tradeCount*1000+",TradeId:"+tradeCount+",CCYPair:EURGBP,valuedate:"+d.ToString("dd/mm/yyyy")+",Rate:1.5<EOF>");  
+                }
+                else
+                {
+                    d.AddDays(tradeCount);
+                    Send(client,"InstrumentType:FWD,amount:"+tradeCount*1000+",TradeId:"+tradeCount+",CCYPair:USDGBP,valuedate:"+d.ToString("dd/mm/yyyy")+",Rate:1.5<EOF>");  
+                }
                     sendDone.WaitOne();  
 
                 // Receive the response from the remote device.  
                 Receive(client);  
                 receiveDone.WaitOne();  
-//Thread.Sleep(500);
+                //Thread.Sleep(500);
                 // Write the response to the console.  
                 
 
@@ -197,7 +206,7 @@ IPHostEntry ipHostInfo = Dns.GetHostEntry(serverDNS);
                     response = state.sb.ToString();  
                     Console.WriteLine("Response received : {0}", response); 
                 }  
-                // Signal that all bytes have been received.  
+                // Signal that all tes have been received.  
                 receiveDone.Set();  
             }  
         } catch (Exception e) {  
